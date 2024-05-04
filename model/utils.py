@@ -4,10 +4,10 @@ from keras.api.preprocessing import image
 from keras.api.applications.resnet50 import preprocess_input
 from tqdm import tqdm
 import matplotlib.pyplot as plt
-# import matplotlib.image as mpimg
+from keras.src.models import Functional
 
-
-def extract_features(img_path, model):
+# using resnet50 model
+def extract_features(img_path, model: Functional):
     img = image.load_img(img_path, target_size=(224, 224))
     x = image.img_to_array(img)
     x = np.expand_dims(x, axis=0)
@@ -16,13 +16,13 @@ def extract_features(img_path, model):
     return features
 
 
-# def extract_features_from_directory(dir_path, model):
-#     features_list = dict()
-#     files = os.listdir(dir_path)
-#     for file in tqdm(files):
-#         features_list[file.replace('.jpg', '')] = extract_features(
-#             (dir_path + file), model)
-#     return features_list
+def extract_features_from_directory(dir_path, model):
+    features_list = dict()
+    files = os.listdir(dir_path)
+    for file in tqdm(files):
+        features_list[file.replace('.jpg', '')] = extract_features(
+            (dir_path + file), model)
+    return features_list
 
 
 def generate_datasets(selected_images_keys_list, features_list):
